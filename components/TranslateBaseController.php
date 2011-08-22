@@ -10,9 +10,9 @@ class TranslateBaseController extends Controller{
         }else{
             if(is_array($url)){
     			$route=isset($url[0]) ? $url[0] : '';
-    			$url=$this->createUrl($route,array_splice($url,1));
+    			$url=$this->createUrl($route,array_slice($url,1));
     		}
-            echo CHtml::script("window.top.location='$url'");
+            Yii::app()->getClientScript()->registerScript('redirect',"window.top.location='$url'");
             if($terminate)
                 Yii::app()->end($statusCode);
         }

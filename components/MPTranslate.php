@@ -64,7 +64,7 @@ class MPTranslate extends CApplicationComponent{
      * method that handles the on missing translation event
      * 
      * @param CMissingTranslationEvent $event
-     * @return string the message to translate or the translated message if autoTranslate is set to true
+     * @return string the message to translate or the translated message if option autoTranslate is set to true
      */
     function missingTranslation($event){
         Yii::import('translate.models.MessageSource');
@@ -132,7 +132,7 @@ class MPTranslate extends CApplicationComponent{
      * 
      * @param string $label
      * @param string $type accepted types are button and link
-     * @return
+     * @return string
      */
     function editLink($label='Edit translations',$type='link'){
         $url=Yii::app()->getController()->createUrl('/translate/edit/admin');
@@ -266,12 +266,14 @@ class MPTranslate extends CApplicationComponent{
         if($targetLanguage===$sourceLanguage)
             throw new CException(TranslateModule::t('targetLanguage must be different than sourceLanguage'));
         $query=$this->queryGoogle(array('q'=>$message,'source'=>$sourceLanguage,'target'=>$targetLanguage));
+        if($query===false)
+            return false;
         if(is_array($message)){
             foreach($query->translations as $translation)
                 $translated[]=$translation->translatedText;
             return $translated;
-        }else
-            return $query->translations[0]->translatedText;
+        }
+        return $query->translations[0]->translatedText;
     }
     /**
      * returns an array containing all languages accepted by google translate 
@@ -284,6 +286,8 @@ class MPTranslate extends CApplicationComponent{
         if(!isset($this->_cache[$cacheKey])){
             if(($cache=Yii::app()->getCache())===null || ($languages=$cache->get($cacheKey))===false){
                 $queryLanguages=$this->queryGoogle($targetLanguage!==null ? array('target'=>$targetLanguage) : array(),'languages');
+                if($queryLanguages===false)
+                    return false;
                 foreach($queryLanguages->languages as $language){
                     $languages[$language->language]=isset($language->name) ? $language->name : $language->language;
                 }
@@ -305,7 +309,7 @@ class MPTranslate extends CApplicationComponent{
      */
     protected function queryGoogle($args=array(),$method=null){
         if(empty($this->googleApiKey))
-            throw new CException(TranslateModule::t('You must set googleApiKey'));
+            throw new CException(TranslateModule::t('You must provide your google api key in option googleApiKey'));
         if($method!==null)
             $method="/{$method}";
         $url=preg_replace('/%5B\d+%5D/','',"https://www.googleapis.com/language/translate/v2{$method}?".http_build_query(array_merge($args,array('key'=>$this->googleApiKey))));
@@ -327,7 +331,7 @@ class MPTranslate extends CApplicationComponent{
             Yii::log('Google translate error:'.$trans->error->code.'. '.$trans->error->message,CLogger::LEVEL_ERROR,'translate');
             return false;
         }elseif(!isset($trans->data)){
-            Yii::log('Google transalte error:'.print_r($trans,true),CLogger::LEVEL_ERROR,'translate');
+            Yii::log('Google translate error:'.print_r($trans,true),CLogger::LEVEL_ERROR,'translate');
             return false;
         }else
             return $trans->data;
