@@ -73,9 +73,9 @@ CREATE TABLE Message
 
 ## How to use
 
-Extract the file to protected/modules
+Extract the file to protected/modules  
 
-somewhere in your application define the language like the following:
+somewhere in your application define the language like the following:  
 ``` php
 //shortcut
 $translate=Yii::app()->translate;
@@ -96,109 +96,120 @@ echo $translate->missingLink('Missing translations page');
 
 ```
 
-
-
 ## Options avaliable
 
 #### string $defaultLanguage
-defaults language to use if none is set.
+defaults language to use if none is set.  
 
 if null, it will receive Yii target language
 #### array $dialogOptions
 options of the dialog
-#### string $googleApiKey
-your google translate api key.
 
-set this if you wish to use googles translate service to translate the messages
+#### string $googleApiKey
+your google translate api key.  
+set this if you wish to use googles translate service to translate the messages  
 
 #### array $acceptedLanguages
-an array containing the languages accepted by your application.
-
-if not set, it will receive an array containing the target language and the source language
+an array containing the languages accepted by your application.  
+if not set, it will receive an array containing the target language and the source language  
 
 #### boolean $autoTranslate
-wheter to auto translate the missing messages found on the page. Defaults to false.
-Needs google api key to set
+wheter to auto translate the missing messages found on the page. Defaults to false.  
+Needs google api key to set  
 
 #### boolean $autoSetLanguage
-wheter to automatically set the language on the initialization of the component. Defaults to true.
+wheter to automatically set the language on the initialization of the component. Defaults to true.  
 
 ##Methods avaliable
-for the translate components
-use it like this:
+
+for the translate components  
+use it like this:  
 ``` php
 Yii::app()->translate->someMethod($someArg);
 ```
 
 #### string getLanguage()
-Returns the language in use.
-The language is determined by many variables: session, post, get, header in this order.
-It will filter the language by using accepted languages.
-If is set "en_US" and it is not avaliable, then it will check if "en" is avaliable.
-#### string setLanguage($language=null)
-If $language is null then it will use getLanguage to determine it.
-It doesn't check if the language is in the accepted languages.
-Returns the language setted.
+Returns the language in use.  
+The language is determined by many variables: session, post, get, header in this order.  
+It will filter the language by using accepted languages.  
+If is set "en_US" and it is not avaliable, then it will check if "en" is avaliable.  
+
+#### string setLanguage($language=null)  
+If $language is null then it will use getLanguage to determine it.  
+It doesn't check if the language is in the accepted languages.  
+Returns the language setted.  
+
 #### boolean hasMessage()
-Return wheter there are messages to be translated in this page
+Return wheter there are messages to be translated in this page  
+
 #### string dropdown()
-Returns a dropdown containing all accepted languages with an onchange event that will change the application's language.
+Returns a dropdown containing all accepted languages with an onchange event that will change the application's language.  
+
 #### string googleTranslate($message,$targetLanguage=null,$sourceLanguage=null)
 Translate some message from $sourceLanguage to $targetLanguage using google translate api. 
-Option GoogleApiKey must be defined to use this service.
+Option GoogleApiKey must be defined to use this service.  
+
 #### array getGoogleAcceptedLanguages($targetLanguage=null)
 returns an array containing all languages accepted by google translate. 
-Option googleApiKey must be defined to use this service.
+Option googleApiKey must be defined to use this service.  
+
 #### string translateLink($label,$type='link')
-Generates a link or button to the page where you translate the missing translations found in this page
+Generates a link or button to the page where you translate the missing translations found in this page  
+
 #### string translateDialogLink($label,$title=null,$type='link')
-Generates a link or button that generates a dialog to the page where you translate the missing translations found in this page.
+Generates a link or button that generates a dialog to the page where you translate the missing translations found in this page.  
+
 #### string editLink($label,$type='link')
-Creates a link to the page where you edit the translations.
+Creates a link to the page where you edit the translations.  
+
 #### string missingLink($label,$type='link')
-Creates a link to the page where you check all missing translations
+Creates a link to the page where you check all missing translations  
 
-_type for any link can be 'button' or 'link'_
+_type for any link can be 'button' or 'link'_  
 
-if you are running php 5.3 you can use any method like this
-MPTranslate::someMethod($someArg);
+if you are running php 5.3 you can use any method like this  
+``` php
+MPTranslate::someMethod($someArg);  
+```
 
-For the TranslateModule
+### For TranslateModule :
 
 #### MPTranslate translator()
-returns the translate component
+returns the translate component  
+
 #### string t($message,$params=array())
-used internally for the module to translate its content
+used internally for the module to translate its content  
+
 #### string $translateComponentId
-the id of the translate component. Defaults to 'translate' 
+the id of the translate component. Defaults to 'translate'   
 
 
 ##Version
 
-0.2.3: 18/08/2011
+0.2.3: 18/08/2011  
 
-- LANGUAGE_KEY is now a constant named ID
-- Google errors are now logged instead of beeing treated as an exception 
++ LANGUAGE_KEY is now a constant named ID  
++ Google errors are now logged instead of beeing treated as an exception   
 
-0.2.2: 23/05/2011
+0.2.2: 23/05/2011  
 
-- Fixed pagination in dialog and textarea size 
++ Fixed pagination in dialog and textarea size   
 
-0.2.1: 20/05/2011
+0.2.1: 20/05/2011  
 
-- Fixed some minor bugs
++ Fixed some minor bugs  
 
-0.2: 18/05/2011
+0.2: 18/05/2011  
 
-- complete rewrite of the code to allow easier customization
-- added google translate support (thanks to Toshi)
-- added defaultLanguage (thanks to duna)
-- fixed a couple of minor bugs
-- added a lof of new funcionalities
++ complete rewrite of the code to allow easier customization  
++ added google translate support (thanks to Toshi)  
++ added defaultLanguage (thanks to duna)  
++ fixed a couple of minor bugs  
++ added a lof of new funcionalities  
 
-0.1: 10/05/2011
+0.1: 10/05/2011  
 
--first release
++ first release
 
 
 ##Resources
@@ -211,7 +222,7 @@ the id of the translate component. Defaults to 'translate'
 
 
 
-##Notes
+## Notes
 
 #### This module will slow down your application, use it for development only
 #### It's not fully tested. I'm expecting your feedback to improve it
