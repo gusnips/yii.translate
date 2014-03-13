@@ -5,19 +5,17 @@ This extension collects all untranslated messages in the page and then you can a
 Basic usage:
 
 
-~~~
-[php]
+``` php
 echo Yii::t('app','Some text').' - '.Yii::t('app','some other text');
 Yii::app()->translate->editLink('Translate');
 
-~~~
+```
 
 
-##Setup
+## Setup
 
 In your config :
-~~~
-[php]
+``` php
 <?php
 return array(
     'preload'=>array('translate'),//either here or somewhere in the beginning
@@ -40,20 +38,19 @@ return array(
             'acceptedLanguages'=>array(
                   'en'=>'English',
                   'pt'=>'Portugues',
-                  'es'=>'Español'
+                  'es'=>'Espaï¿½ol'
             ),
         ),
     )
 );
-~~~
+```
 
 Do not forget to create the tables like [described here](http://www.yiiframework.com/doc/api/1.1/CDbMessageSource "")
-####the id of message source must be auto-incremental
+#### the id of message source must be auto-incremental
 
 the name of the tables can be modified
 
-~~~
-[php]
+``` sql
 CREATE TABLE SourceMessage
 (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -70,17 +67,16 @@ CREATE TABLE Message
          REFERENCES SourceMessage (id) ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
-~~~
+```
 
 
 
-##How to use
+## How to use
 
 Extract the file to protected/modules
 
 somewhere in your application define the language like the following:
-~~~
-[php]
+``` php
 //shortcut
 $translate=Yii::app()->translate;
 //in your layout add
@@ -98,11 +94,11 @@ echo $translate->editLink('Edit translations page');
 echo $translate->missingLink('Missing translations page');
 
 
-~~~
+```
 
 
 
-##Options avaliable
+## Options avaliable
 
 #### string $defaultLanguage
 defaults language to use if none is set.
@@ -130,10 +126,10 @@ wheter to automatically set the language on the initialization of the component.
 ##Methods avaliable
 for the translate components
 use it like this:
-~~~
-[php]
+``` php
 Yii::app()->translate->someMethod($someArg);
-~~~
+```
+
 #### string getLanguage()
 Returns the language in use.
 The language is determined by many variables: session, post, get, header in this order.
