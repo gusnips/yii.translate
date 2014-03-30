@@ -30,19 +30,22 @@ class MessageSource extends CActiveRecord{
 
 	function search(){
 		$criteria=new CDbCriteria;
-        
-        $criteria->with=array('mt');
-        
-        $criteria->addCondition('not exists (select `id` from `'.Message::model()->tableName().'` `m` where `m`.`language`=:lang and `m`.id=`t`.`id`)');
-      
+        	
+        	$criteria->addCondition('not exists (select `id` from `'.Message::model()->tableName().'` `m` where `m`.`language`=:lang and `m`.id=`t`.`id`)');
+        	
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.category',$this->category);
 		$criteria->compare('t.message',$this->message);
-        
-        $criteria->params[':lang']=$this->language;
-        
+        	
+        	$criteria->params[':lang']=$this->language;
+        	
+        	$count = $this->count($criteria);
+        	
+        	$criteria->with=array('mt');
+        	
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria'=>$criteria,
+			'totalItemCount'=>$count,
 		));
 	}
 
