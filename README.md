@@ -1,21 +1,21 @@
-#### Module to handle translations
+## Yii Module to handle translations
 
 This extension collects all untranslated messages in the page and then you can add a button to translate, translate automatically using google translate, check for missing translations, edit translations and more.
 
 Basic usage:
 
 
-``` php
+```php
 echo Yii::t('app','Some text').' - '.Yii::t('app','some other text');
 Yii::app()->translate->editLink('Translate');
-
 ```
 
 
 ## Setup
 
-In your config :
-``` php
+In your config :  
+
+```php
 <?php
 return array(
     'preload'=>array('translate'),//either here or somewhere in the beginning
@@ -38,19 +38,19 @@ return array(
             'acceptedLanguages'=>array(
                   'en'=>'English',
                   'pt'=>'Portugues',
-                  'es'=>'Espa�ol'
+                  'es'=>'Español'
             ),
         ),
     )
 );
 ```
 
-Do not forget to create the tables like [described here](http://www.yiiframework.com/doc/api/1.1/CDbMessageSource "")
+Do not forget to create the tables like [described here](http://www.yiiframework.com/doc/api/1.1/CDbMessageSource "")  
 #### the id of message source must be auto-incremental
 
-the name of the tables can be modified
+the name of the tables can be modified  
 
-``` sql
+```sql
 CREATE TABLE SourceMessage
 (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -76,7 +76,8 @@ CREATE TABLE Message
 Extract the file to protected/modules  
 
 somewhere in your application define the language like the following:  
-``` php
+
+```php
 //shortcut
 $translate=Yii::app()->translate;
 //in your layout add
@@ -92,8 +93,6 @@ if($translate->hasMessages()){
 echo $translate->editLink('Edit translations page');
 //link to the page where you check for all unstranslated messages of the system
 echo $translate->missingLink('Missing translations page');
-
-
 ```
 
 ## Options avaliable
@@ -165,10 +164,10 @@ Creates a link to the page where you edit the translations.
 #### string missingLink($label,$type='link')
 Creates a link to the page where you check all missing translations  
 
-_type for any link can be 'button' or 'link'_  
+_type for any link can be `button` or `link`_  
 
 if you are running php 5.3 you can use any method like this  
-``` php
+```php
 MPTranslate::someMethod($someArg);  
 ```
 
@@ -185,6 +184,12 @@ the id of the translate component. Defaults to 'translate'
 
 
 ##Version
+
+0.2.4: 24/07/2014  
+
++ message and categories are now case-insensitive  
++ fix page count   
+
 
 0.2.3: 18/08/2011  
 
@@ -214,15 +219,12 @@ the id of the translate component. Defaults to 'translate'
 
 ##Resources
 
-[Get a google API key](https://code.google.com/apis/console/?api=translate "Get a google api key")
-
-[CDbMessageSource](http://www.yiiframework.com/doc/api/1.1/CDbMessageSource "CDbMessageSource")
-
-[Forum support](http://www.yiiframework.com/forum/index.php?/topic/19302-translate-module/ "Forum support")
++ [Get a google API key](https://code.google.com/apis/console/?api=translate "Get a google api key")
++ [CDbMessageSource](http://www.yiiframework.com/doc/api/1.1/CDbMessageSource "CDbMessageSource")
++ [Forum support](http://www.yiiframework.com/forum/index.php?/topic/19302-translate-module/ "Forum support")
 
 
 
 ## Notes
 
 #### This module will slow down your application, use it for development only
-#### It's not fully tested. I'm expecting your feedback to improve it
