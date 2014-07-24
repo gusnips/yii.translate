@@ -185,10 +185,10 @@ the id of the translate component. Defaults to 'translate'
 
 ##Version
 
-0.2.4: 24/07/2014  
+0.2.45 24/07/2014  
 
 + message and categories are now case-insensitive  
-+ fix page count   
++ fix page count in missing translate page
 
 
 0.2.3: 18/08/2011  
