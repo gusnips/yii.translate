@@ -1,5 +1,11 @@
 <?php
-class MPTranslate extends CApplicationComponent{
+
+/**
+ * @author Gustavo Salomé Silva <gustavonips@gmail.com>
+ * 
+ **/
+class MPTranslate extends CApplicationComponent
+{
     /**
      * @staticvar array $messages contains the untranslated messages found
      * */
@@ -47,7 +53,8 @@ class MPTranslate extends CApplicationComponent{
 	/**
 	 * handles the initialization parameters of the components
 	 */
-	function init(){
+	public function init()
+	{
         if(empty($this->defaultLanguage))
             $this->defaultLanguage=Yii::app()->getLanguage();
         if($this->autoSetLanguage)
@@ -60,25 +67,29 @@ class MPTranslate extends CApplicationComponent{
         }
         return parent::init();
 	}
+	
     /**
      * method that handles the on missing translation event
      * 
      * @param CMissingTranslationEvent $event
      * @return string the message to translate or the translated message if option autoTranslate is set to true
      */
-    function missingTranslation($event){
+    public function missingTranslation($event)
+    {
         Yii::import('translate.models.MessageSource');
         $attributes=array(
         	'category'=>strtolower($event->category),
         	'message'=>strtolower($event->message),
         );
-        if(($model=MessageSource::model()->find('LOWER(message)=:message AND LOWER(category)=:category',$attributes))===null){
+        if(($model=MessageSource::model()->find('LOWER(message)=:message AND LOWER(category)=:category',$attributes))===null)
+        {
             $model=new MessageSource();
             $model->attributes=$attributes;
             if(!$model->save())
                 return Yii::log(TranslateModule::t('Message '.$event->message.' could not be added to messageSource table'));;
         }
-        if($model->id){
+        if($model!==null)
+        {
             if($this->autoTranslate && substr($event->language,0,2)!==substr(Yii::app()->sourceLanguage,0,2)){//&& key_exists($event->language,$this->getGoogleAcceptedLanguages($event->language))
                 Yii::import('translate.models.Message');
                 $translation=$this->googleTranslate($event->message,$event->language,Yii::app()->sourceLanguage);
@@ -103,12 +114,15 @@ class MPTranslate extends CApplicationComponent{
      * @param string $type accepted types are : link and button
      * @return string
      */
-    function translateLink($label='Translate',$type='link'){
+    public function translateLink($label='Translate',$type='link')
+    {
         $form=CHtml::form(Yii::app()->getController()->createUrl('/translate/translate/index'));
         if(count(self::$messages))
+        {
             foreach(self::$messages as $index=>$message)
                 foreach($message as $name=>$value)
                     $form.=CHtml::hiddenField(self::ID."-missing[$index][$name]",$value);
+        }
         if($type==='button')
             $form.=CHtml::submitButton($label);
         else
@@ -116,9 +130,15 @@ class MPTranslate extends CApplicationComponent{
         $form.=CHtml::endForm();
         return $form;
     }
-    function hasMessages(){
+    
+    /**
+     * @return boolean
+     * */
+    function hasMessages()
+    {
         return count(self::$messages)>0;
     }
+    
     /**
      * generates a link or button that generates a dialog to the page where you translate the missing translations found in this page
      * 
@@ -127,9 +147,11 @@ class MPTranslate extends CApplicationComponent{
      * @param string $type accepted types are : link and button
      * @return string
      */
-    function translateDialogLink($label='Translate',$title=null,$type='link'){
+    public function translateDialogLink($label='Translate',$title=null,$type='link')
+    {
         return $this->ajaxDialog($label,'translate/translate/index',$title,$type,array('data'=>array(self::ID.'-missing'=>self::$messages)));
     }
+    
     /**
      * creates a link to the page where you edit the translations
      * 
@@ -137,13 +159,15 @@ class MPTranslate extends CApplicationComponent{
      * @param string $type accepted types are button and link
      * @return string
      */
-    function editLink($label='Edit translations',$type='link'){
+    public function editLink($label='Edit translations',$type='link')
+    {
         $url=Yii::app()->getController()->createUrl('/translate/edit/admin');
         if($type==='button')
             return CHtml::button($label,$url);
         else
             return CHtml::link($label,$url);
     }
+    
     /**
      * creates a link to the page where you check all missing translations
      * 
@@ -151,14 +175,18 @@ class MPTranslate extends CApplicationComponent{
      * @param string $type accepted types are button and link
      * @return string
      */
-    function missingLink($label='Missing translations',$type='link'){
+    public function missingLink($label='Missing translations',$type='link')
+    {
         $url=Yii::app()->getController()->createUrl('/translate/edit/missing');
         if($type==='button')
             return CHtml::button($label,$url);
         else
             return CHtml::link($label,$url);
     }
-    private function ajaxDialog($label,$url,$title=null,$type='link',$ajaxOptions=array()){
+    
+    
+    private function ajaxDialog($label,$url,$title=null,$type='link',$ajaxOptions=array())
+    {
         
         $id=self::ID.'-dialog';
         
@@ -181,6 +209,7 @@ class MPTranslate extends CApplicationComponent{
         ),true);
         return $content;
     }
+    
     /**
      * returns the language in use
      * the language is determined by many variables: session, post, get, header in this order
@@ -188,7 +217,8 @@ class MPTranslate extends CApplicationComponent{
      * 
      * @return string
      */
-    function getLanguage(){
+    public function getLanguage()
+    {
         $key=self::ID;
         if(($language=@$this->_cache['language'])!==null)
             return $language;
@@ -201,7 +231,8 @@ class MPTranslate extends CApplicationComponent{
         else
             $language=Yii::app()->getRequest()->getPreferredLanguage();
         
-        if(!key_exists($language,$this->acceptedLanguages)){
+        if(!key_exists($language,$this->acceptedLanguages))
+        {
             if($language===Yii::app()->sourceLanguage)
                 $language=$this->defaultLanguage;
             elseif(strpos($language,"_")!==false){
@@ -212,6 +243,7 @@ class MPTranslate extends CApplicationComponent{
         }
         return $language;
     }
+    
     /**
      * 
      * set the language that the application will use
@@ -222,7 +254,8 @@ class MPTranslate extends CApplicationComponent{
      * @param string | null $language language to set
      * @return string the language setted
      */
-    function setLanguage($language=null){
+    public function setLanguage($language=null)
+    {
         if($language===null)
             $language=$this->getLanguage();
         
@@ -232,12 +265,14 @@ class MPTranslate extends CApplicationComponent{
         Yii::app()->setLanguage($language);
         return $language;
     }
+    
     /**
      * generates a dropdown containing all accepted languages
      * 
      * @return string
      */
-    function dropdown(){
+    public function dropdown()
+    {
         Yii::app()->getClientScript()->registerScript(self::ID.'-dropdown','
            $("#'.self::ID.'").change(function(){
                 $.post(
@@ -251,6 +286,7 @@ class MPTranslate extends CApplicationComponent{
             array('id'=>self::ID)
         );
     }
+    
     /**
      * translate some message from $sourceLanguage to $targetLanguage using google translate api
      * googleApiKey must be defined to use this service
@@ -259,7 +295,8 @@ class MPTranslate extends CApplicationComponent{
      * @param mixed $sourceLanguage language that the message is written in, if null it will use the application source language
      * @return string translated message
      */
-    function googleTranslate($message,$targetLanguage=null,$sourceLanguage=null) {
+    public function googleTranslate($message,$targetLanguage=null,$sourceLanguage=null) 
+    {
         if($targetLanguage===null)
             $targetLanguage=Yii::app()->getLanguage();
         if($sourceLanguage===null)
@@ -271,7 +308,8 @@ class MPTranslate extends CApplicationComponent{
         $query=$this->queryGoogle(array('q'=>$message,'source'=>$sourceLanguage,'target'=>$targetLanguage));
         if($query===false)
             return false;
-        if(is_array($message)){
+        if(is_array($message))
+        {
             foreach($query->translations as $translation)
                 $translated[]=$translation->translatedText;
             return $translated;
@@ -284,24 +322,29 @@ class MPTranslate extends CApplicationComponent{
      * @param string $targetLanguage 
      * @return array
      */
-    function getGoogleAcceptedLanguages($targetLanguage=null){
+    public function getGoogleAcceptedLanguages($targetLanguage=null)
+    {
         $cacheKey=self::ID.'-cache-google-languages-'.$targetLanguage;
-        if(!isset($this->_cache[$cacheKey])){
+        if(!isset($this->_cache[$cacheKey]))
+        {
             if(($cache=Yii::app()->getCache())===null || ($languages=$cache->get($cacheKey))===false){
                 $queryLanguages=$this->queryGoogle($targetLanguage!==null ? array('target'=>$targetLanguage) : array(),'languages');
                 if($queryLanguages===false)
                     return false;
-                foreach($queryLanguages->languages as $language){
+                foreach($queryLanguages->languages as $language)
+                {
                     $languages[$language->language]=isset($language->name) ? $language->name : $language->language;
                 }
                 if($cache!==null)
                     $cache->set($cacheKey,$languages);
                 $this->_cache[$cacheKey]=$languages;
             }
-        }else
+        }
+        else
             $languages=$this->_cache[$cacheKey];
         return $languages;
     }
+    
     /**
      * query google translate api 
      * 
@@ -310,7 +353,8 @@ class MPTranslate extends CApplicationComponent{
      * accepted values are null(translate), "languages" and "detect"
      * @return stdClass the google response object
      */
-    protected function queryGoogle($args=array(),$method=null){
+    protected function queryGoogle($args=array(),$method=null)
+    {
         if(empty($this->googleApiKey))
             throw new CException(TranslateModule::t('You must provide your google api key in option googleApiKey'));
         if($method!==null)
@@ -348,7 +392,8 @@ class MPTranslate extends CApplicationComponent{
      * @param mixed $args
      * @return mixed
      */
-    static function __callStatic($method,$args){
+    public static function __callStatic($method,$args)
+    {
         return call_user_func_array(array(TranslateModule::translator(),$method),$args);
     }
 }
